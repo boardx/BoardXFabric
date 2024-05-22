@@ -584,19 +584,21 @@ export class SelectableCanvas<
       this.clearContext(this.contextTop);
       this.contextTopDirty = false;
     }
+
+    !this._objectsToRender &&
+      (this._objectsToRender = this._chooseObjectsToRender());
+    this.renderCanvas(this.contextContainer, this._objectsToRender);
     if (this.hasLostContext) {
       this.renderTopLayer(this.contextTop);
       this.hasLostContext = false;
     }
-    !this._objectsToRender &&
-      (this._objectsToRender = this._chooseObjectsToRender());
-    this.renderCanvas(this.contextContainer, this._objectsToRender);
   }
 
   /**
    * text selection is rendered by the active text instance during the rendering cycle
    */
   renderTopLayer(ctx: CanvasRenderingContext2D): void {
+    console.log('renderTopLayer')
     ctx.save();
     if (this.isDrawingMode && this._isCurrentlyDrawing) {
       this.freeDrawingBrush && this.freeDrawingBrush._render();
@@ -616,6 +618,7 @@ export class SelectableCanvas<
    * Does not render text selection.
    */
   renderTop() {
+    console.log('renderTop');
     const ctx = this.contextTop;
     this.clearContext(ctx);
     this.renderTopLayer(ctx);
@@ -1518,6 +1521,7 @@ export class SelectableCanvas<
    * Clears all contexts (background, main, top) of an instance
    */
   clear() {
+    console.log('clear')
     // discard active object and fire events
     this.discardActiveObject();
     // make sure we clear the active object in case it refused to be discarded

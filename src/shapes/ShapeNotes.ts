@@ -19,7 +19,7 @@ export const shapeNotesDefaultValues: Partial<TClassProperties<ShapeNotes>> = {
   maxHeight: 138,
   textAlign: 'center',
   uniformScaling: false,
-  centeredScaling: false
+  centeredScaling: false,
 };
 
 /**
@@ -59,7 +59,20 @@ export class ShapeNotes extends Textbox {
 
   declare icon: string;
 
-  public extendPropeties = ['obj_type', 'whiteboardId', 'userId', 'timestamp', 'zIndex', 'locked', 'verticalAlign', 'lines', '_id', 'zIndex', 'relationship', 'icon'];
+  public extendPropeties = [
+    'obj_type',
+    'whiteboardId',
+    'userId',
+    'timestamp',
+    'zIndex',
+    'locked',
+    'verticalAlign',
+    'lines',
+    '_id',
+    'zIndex',
+    'relationship',
+    'icon',
+  ];
   /**
    * Minimum calculated width of a textbox, in pixels.
    * fixed to 2 so that an empty textbox cannot go to 0
@@ -410,8 +423,7 @@ export class ShapeNotes extends Textbox {
       }
     }
     return graphemes;
-  };
-
+  }
 
   _wrapLine(
     _line,
@@ -479,7 +491,6 @@ export class ShapeNotes extends Textbox {
       } else {
         line = line.concat(word);
       }
-
 
       infixWidth = splitByGrapheme
         ? 0
@@ -634,7 +645,7 @@ export class ShapeNotes extends Textbox {
       'verticalAlign',
       'maxHeight',
       'shadow',
-      'subObjs'
+      'subObjs',
     ];
     keys.forEach((key) => {
       object[key] = this[key];
@@ -650,14 +661,15 @@ export class ShapeNotes extends Textbox {
    */
   toObject(propertiesToInclude: Array<any>): object {
     return super.toObject(
-      [...this.extendPropeties, 'minWidth', 'splitByGrapheme'].concat(propertiesToInclude)
+      [...this.extendPropeties, 'minWidth', 'splitByGrapheme'].concat(
+        propertiesToInclude
+      )
     );
-
   }
   /**boardx custom function */
   getObjectsIntersected() {
     const objects = this.canvas._getIntersectedObjects(this);
-    objects.filter(obj => {
+    objects.filter((obj) => {
       return obj._id !== this._id && obj.obj_type !== 'WBArrow';
     });
     return objects;
@@ -669,14 +681,14 @@ export class ShapeNotes extends Textbox {
         blur: 2,
         offsetX: 0,
         offsetY: 0,
-        color: 'rgba(0, 0, 0, 0.5)'
+        color: 'rgba(0, 0, 0, 0.5)',
       });
     } else {
       this.shadow = new fabric.Shadow({
         blur: 8,
         offsetX: 0,
         offsetY: 4,
-        color: 'rgba(0,0,0,0.04)'
+        color: 'rgba(0,0,0,0.04)',
       });
     }
   }
@@ -722,33 +734,34 @@ export class ShapeNotes extends Textbox {
       13: Constallation Rect
       14: Constellation Round
     */
-
     const shapeArray = [
-      'M-69,-69L69,-69 69,69 -69,69z',
-      'm-69,0 l69,-69 69,69 -69,69 -69,-69z',
-      'm51.14083,-70l-101.28163,0c-10.96794,0 -19.8592,8.76514 -19.8592,19.5775l0,99.84501c0,10.81235 8.89125,19.5775 19.8592,19.5775l101.28163,0c10.96792,0 19.8592,-8.76516 19.8592,-19.5775l0,-99.84501c0,-10.81237 -8.89127,-19.5775 -19.8592,-19.5775z',
-      'M-69,0a69,69 0 1,0 138,0a69,69 0 1,0 -138,0',
-      'm-60,-35.1325l60.3923,-34.8675l60.3923,34.8675l0,69.73493l-60.3923,34.86799l-60.3923,-34.86799l0,-69.73493z',
-      'm-71,70.74999l70.5,-139.74999l70.5,139.74999l-140.99999,0z',
-      'm-70.21501,70.82836l28,-140.00001l112,0l-28,140.00001l-112,0z',
-      'm-69,-16.38404l52.71168,0l16.28832,-52.61596l16.28833,52.61596l52.71167,0l-42.64457,32.51808l16.28916,52.61596l-42.64459,-32.51897l-42.64458,32.51897l16.28916,-52.61596l-42.64458,-32.51808z',
-      'm-70,-23.40091l46.59909,0l0,-46.59909l47.80182,0l0,46.59909l46.59909,0l0,47.80182l-46.59909,0l0,46.59909l-47.80182,0l0,-46.59909l-46.59909,0l0,-47.80182z',
-      'm69,69l-138,0l0,-138l138,138z',
-      'm-69,70l139,0l0,-139l-139,139z',
-      'm70.87066,36.0449l-140.87066,-0.00205c5.11499,-39.91161 35.12907,-69.54285 70.43538,-69.54285c35.30263,0 65.31841,29.63308 70.43528,69.5449z',
-      'm-69,68.5488c9.55735,-78.68015 68.34233,-137.52537 137.9372,-138.04693l0,90.66818l0,47.38267l-137.9372,-0.00392z',
-      'm30.81958,0.12008l37.68039,34.8592l0,35.52068l-139.99994,0l0,-141.99993l139.99994,0l0,34.81153l-37.68601,36.28619l-0.27367,0.26402l0.2793,0.25831l-0.00001,0z',
-      'm29.19742,0.94831c0.00348,0.00417 0.00696,0.00835 0.01948,0.00209c0.01113,0.01879 0.02435,0.03757 0.03896,0.05566l0,0l0.00139,0.0007l0.00765,0.00557l0.06123,0.04731l0.48914,0.37851l3.91657,3.02875l31.11617,24.06231c-10.70812,24.39489 -35.07657,41.43186 -63.42351,41.43186c-38.23501,0 -69.23061,-30.9958 -69.23061,-69.23053c0,-38.23494 30.9956,-69.23053 69.23061,-69.23053c28.07281,0 52.24365,16.70877 63.10832,40.72522c-17.77729,13.90775 -26.59983,20.96711 -30.9784,24.5504c-2.19729,1.79825 -3.27854,2.72365 -3.8122,3.20102c-0.26509,0.23754 -0.40077,0.36953 -0.47244,0.44593c-0.0334,0.03597 -0.06401,0.07132 -0.08767,0.1068c-0.00974,0.01524 -0.0334,0.05267 -0.04801,0.10465c-0.00765,0.02721 -0.01739,0.07466 -0.01113,0.13338c0.00348,0.03131 0.01113,0.0661 0.02714,0.10228c0.00417,0.01044 0.00905,0.02018 0.01461,0.02992c0.00417,0.00765 0.00905,0.016 0.01461,0.02366c0.00557,0.00835 0.01531,0.02087 0.01809,0.02505z'
+      'M-50,-50L50,-50 50,50 -50,50z', // 0: rect
+      'm-50,0 l50,-50 50,50 -50,50 -50,-50z', // 1: diamond
+      'M-50,-35 Q-50,-50 -35,-50 L35,-50 Q50,-50 50,-35 L50,35 Q50,50 35,50 L-35,50 Q-50,50 -50,35 Z', // 2: rounded rect
+      'M-50,0a50,50 0 1,0 100,0a50,50 0 1,0 -100,0', // 3: circle
+      'm -43.476 -25.4636 l 43.476 -24.5364 l 43.7551 25.2641 l 0 50.5157 l -43.7551 24.2202 l -43.7551 -25.2654 l 0 -50.5157 z', // 4: hexagon
+      'm-50,50l50,-100l50,100l-100,0z', // 5: triangle
+      'm-50,50l20,-100l80,0l-20,100l-80,0z', // 6: parallelogramIcon
+      'm-50,-10l38,0l12,-38l12,38l38,0l-30,23l12,38l-30,-24l-30,24l12,-38l-30,-23z', // 7: star
+      'm-50,-15l33,0l0,-33l34,0l0,33l33,0l0,34l-33,0l0,33l-34,0l0,-33l-33,0l0,-34z', // 8: cross
+      'm50,50l-100,0l0,-100l100,100z', // 9: leftside right triangle
+      'm-50,50l100,0l0,-100l-100,100z', // 10: rightside right triangle
+      'm50,25l-100,-0.00205c3.5,-27.5 25,-48 50,-48c25,0 46.5,20.5 50,48z', // 11: topside semicirle circle
+      'm-50,50c7,-55 47,-96 97,-97l0,65l0,32l-97,-0.00392z', // 12: top-left quarter circle
+      'm20,0l25,23l0,24l-100,0l0,-100l100,0l0,23l-25,24l-0.15,0.14l0.15,0.14l-0.00001,0z', // 13: Constallation Rect
+      'm20,1c0.002,0.002 0.004,0.004 0.01,0.001c0.007,0.01 0.015,0.02 0.02,0.03l0,0l0.001,0.0004l0.005,0.003l0.04,0.03l0.3,0.2l2.5,2l20,15c-7,15 -23,26 -42,26c-25,0 -45,-20 -45,-45c0,-25 20,-45 45,-45c19,0 35,10 42,25c-11,9 -17,14 -20,16c-1.5,1 -2,1.5 -2.5,2c-0.2,0.15 -0.3,0.2 -0.35,0.3c-0.02,0.02 -0.04,0.04 -0.05,0.06c-0.006,0.01 -0.02,0.03 -0.03,0.06c-0.005,0.015 -0.02,0.04 -0.03,0.07c-0.005,0.015 -0.01,0.04 -0.007,0.07c0.002,0.02 0.007,0.04 0.015,0.06c0.003,0.006 0.006,0.012 0.009,0.018c0.003,0.004 0.006,0.009 0.009,0.014c0.003,0.005 0.009,0.01 0.01,0.015c0.004,0.005 0.01,0.015 0.012,0.017z', // 14: Constellation Round
     ];
 
     ctx.save();
 
     const svgPath = new Path2D(shapeArray[this.icon]);
-    const m = getDocument().createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix();
-    m.a = this.width / 138;
+    const m = getDocument()
+      .createElementNS('http://www.w3.org/2000/svg', 'svg')
+      .createSVGMatrix();
+    m.a = this.width / 100;
     m.b = 0;
     m.c = 0;
-    m.d = this.height / 138;
+    m.d = this.height / 100;
     m.e = 0;
     m.f = 0;
     const path = new Path2D();
@@ -798,7 +811,6 @@ export class ShapeNotes extends Textbox {
     return lOffset;
   }
   _getTopOffset() {
-
     switch (this.verticalAlign) {
       case 'middle':
         return -this._getTotalLineHeight() / 2;
@@ -895,7 +907,7 @@ export class ShapeNotes extends Textbox {
       this.canvas.emoji_love,
       this.canvas.emoji_smile,
       this.canvas.emoji_shock,
-      this.canvas.emoji_question
+      this.canvas.emoji_question,
     ];
     const imageListArray = [];
     const emojiList = [];
@@ -945,7 +957,7 @@ export class ShapeNotes extends Textbox {
   _getTotalLineHeights() {
     return this._textLines.reduce(
       (total, _line, index) => total + this.getHeightOfLine(index),
-      0,
+      0
     );
   }
 
@@ -953,7 +965,7 @@ export class ShapeNotes extends Textbox {
     return {
       textLeft: -this.width / 2,
       textTop: this._getTopOffset(),
-      lineTop: this.getHeightOfLine(0)
+      lineTop: this.getHeightOfLine(0),
     };
   }
   getWidgetMenuList() {
@@ -974,7 +986,7 @@ export class ShapeNotes extends Textbox {
       'lineWidth',
       'borderLineIcon',
       'delete',
-      'aiassist'
+      'aiassist',
     ];
   }
   getWidgetMenuLength() {
@@ -993,7 +1005,7 @@ export class ShapeNotes extends Textbox {
         'Send backward',
         'Send to back',
         'Copy as image',
-        'Copy As Text'
+        'Copy As Text',
       ];
     } else {
       menuList = [
@@ -1011,7 +1023,7 @@ export class ShapeNotes extends Textbox {
         'Paste',
         'Cut',
         'Edit',
-        'Delete'
+        'Delete',
       ];
     }
     menuList.push('Select All');

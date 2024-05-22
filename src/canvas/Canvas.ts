@@ -866,7 +866,7 @@ export class Canvas extends SelectableCanvas {
       (transform.target !== target || transform.corner !== corner)
     ) {
       const originalControl =
-        transform.target && transform.target.controls[transform.corner],
+          transform.target && transform.target.controls[transform.corner],
         originalMouseUpHandler =
           originalControl &&
           originalControl.getMouseUpHandler(
@@ -1364,10 +1364,10 @@ export class Canvas extends SelectableCanvas {
       //  both pointer and object should agree on every point
       localPointer = target.group
         ? sendPointToPlane(
-          pointer,
-          undefined,
-          target.group.calcTransformMatrix()
-        )
+            pointer,
+            undefined,
+            target.group.calcTransformMatrix()
+          )
         : pointer;
     // seems used only here.
     // @TODO: investigate;
@@ -1417,9 +1417,9 @@ export class Canvas extends SelectableCanvas {
     }
     let hoverCursor = target.hoverCursor || this.hoverCursor;
     const activeSelection =
-      this._activeObject === this._activeSelection
-        ? this._activeObject
-        : null,
+        this._activeObject === this._activeSelection
+          ? this._activeObject
+          : null,
       // only show proper corner when group selection is not active
       corner =
         (!activeSelection || target.group !== activeSelection) &&
@@ -1574,8 +1574,8 @@ export class Canvas extends SelectableCanvas {
         ? [collectedObjects[0]]
         : []
       : collectedObjects.length > 1
-        ? collectedObjects.filter((object) => !object.onSelect({ e })).reverse()
-        : collectedObjects;
+      ? collectedObjects.filter((object) => !object.onSelect({ e })).reverse()
+      : collectedObjects;
 
     // set active object
     if (objects.length === 1) {
@@ -1642,11 +1642,10 @@ export class Canvas extends SelectableCanvas {
     return;
   }
 
-
   /**
    * @custom
    */
-  zoomToCenterPoint(vpCenter: { x: number; y: number; }, zoom: number) {
+  zoomToCenterPoint(vpCenter: { x: number; y: number }, zoom: number) {
     const vpt: TMat2D = [
       zoom,
       0,
@@ -1659,7 +1658,6 @@ export class Canvas extends SelectableCanvas {
   }
 
   zoomToViewAllObjects() {
-
     let topLeftX = 0;
     let topLeftY = 0;
     let bottomRightX = 0;
@@ -1667,7 +1665,6 @@ export class Canvas extends SelectableCanvas {
 
     //calculate the top left and bottom right points for all the objects on canvas
     this.getObjects().forEach((obj) => {
-
       if (topLeftX == null) {
         topLeftX = obj.left;
         topLeftY = obj.top;
@@ -1678,17 +1675,16 @@ export class Canvas extends SelectableCanvas {
       if (obj.top < topLeftY) topLeftY = obj.top;
 
       if (bottomRightX == null) {
-
         bottomRightX = obj.left + obj.width;
 
         bottomRightY = obj.top + obj.height;
-
       }
 
-      if (obj.left + obj.width > bottomRightX) bottomRightX = obj.left + obj.width;
+      if (obj.left + obj.width > bottomRightX)
+        bottomRightX = obj.left + obj.width;
 
-      if (obj.top + obj.height > bottomRightY) bottomRightY = obj.top + obj.height;
-
+      if (obj.top + obj.height > bottomRightY)
+        bottomRightY = obj.top + obj.height;
     });
 
     //calculate the center of the canvas
@@ -1712,44 +1708,40 @@ export class Canvas extends SelectableCanvas {
     this.zoomToCenterPoint({ x: centerX, y: centerY }, scale / 100);
 
     return scale;
-
   }
 
   zoomToViewObjects(objs: any[]) {
-
     let topLeftX = 0;
     let topLeftY = 0;
     let bottomRightX = 0;
     let bottomRightY = 0;
 
     //calculate the top left and bottom right points for all the objects on canvas
-    objs.forEach((obj: { left: number; top: number; width: any; height: any; }) => {
+    objs.forEach(
+      (obj: { left: number; top: number; width: any; height: any }) => {
+        if (topLeftX == null) {
+          topLeftX = obj.left;
 
-      if (topLeftX == null) {
+          topLeftY = obj.top;
+        }
 
-        topLeftX = obj.left;
+        if (obj.left < topLeftX) topLeftX = obj.left;
 
-        topLeftY = obj.top;
+        if (obj.top < topLeftY) topLeftY = obj.top;
 
+        if (bottomRightX == null) {
+          bottomRightX = obj.left + obj.width;
+
+          bottomRightY = obj.top + obj.height;
+        }
+
+        if (obj.left + obj.width > bottomRightX)
+          bottomRightX = obj.left + obj.width;
+
+        if (obj.top + obj.height > bottomRightY)
+          bottomRightY = obj.top + obj.height;
       }
-
-      if (obj.left < topLeftX) topLeftX = obj.left;
-
-      if (obj.top < topLeftY) topLeftY = obj.top;
-
-      if (bottomRightX == null) {
-
-        bottomRightX = obj.left + obj.width;
-
-        bottomRightY = obj.top + obj.height;
-
-      }
-
-      if (obj.left + obj.width > bottomRightX) bottomRightX = obj.left + obj.width;
-
-      if (obj.top + obj.height > bottomRightY) bottomRightY = obj.top + obj.height;
-
-    });
+    );
 
     //calculate the center of the canvas
     const centerX = (topLeftX + bottomRightX) / 2;
@@ -1772,5 +1764,4 @@ export class Canvas extends SelectableCanvas {
 
     return scale;
   }
-
 }

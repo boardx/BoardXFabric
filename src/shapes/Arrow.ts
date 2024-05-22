@@ -1,16 +1,14 @@
-// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-undef */
+//@ts-nocheck
 import { TClassProperties } from '../typedefs';
 import { classRegistry } from '../ClassRegistry';
 import { Line } from './Line';
 import { Control } from '../controls/Control';
-import type {
-  FabricObjectProps,
-  SerializedObjectProps
-} from './Object/types';
+import type { FabricObjectProps, SerializedObjectProps } from './Object/types';
 import { cacheProperties } from './Object/FabricObject';
 import { transformPoint } from '../util/misc/matrix';
 import { multiplyTransformMatrices } from '../util/misc/matrix';
-
 
 const coordProps = ['x1', 'x2', 'y1', 'y2'] as const;
 
@@ -22,8 +20,7 @@ interface UniqueArrowProps {
 }
 export interface SerializedLineProps
   extends SerializedObjectProps,
-  UniqueArrowProps {
-}
+    UniqueArrowProps {}
 export const ArrowDefaultValues: Partial<TClassProperties<Arrow>> = {
   minWidth: 20,
   dynamicMinWidth: 2,
@@ -36,13 +33,12 @@ export const ArrowDefaultValues: Partial<TClassProperties<Arrow>> = {
   maxHeight: 200,
   subType: 'arrow',
   hasBorders: false,
-  perPixelTargetFind: true
+  perPixelTargetFind: true,
 };
 
-export interface ArrowProps extends FabricObjectProps, UniqueArrowProps { }
+export interface ArrowProps extends FabricObjectProps, UniqueArrowProps {}
 
 export class Arrow extends Line {
-
   declare x1: number;
 
   /**
@@ -103,7 +99,26 @@ export class Arrow extends Line {
 
   declare moving: boolean;
 
-  public extendPropeties = ['obj_type', 'whiteboardId', 'userId', 'timestamp', 'zIndex', 'locked', 'connectorShape', '_id', 'subType', 'perPixelTargetFind', 'userNo', 'connectorEnd', 'connectorStart', 'connectorType', 'tips', 'connectorStyle', 'timestamp', 'moving'];
+  public extendPropeties = [
+    'obj_type',
+    'whiteboardId',
+    'userId',
+    'timestamp',
+    'zIndex',
+    'locked',
+    'connectorShape',
+    '_id',
+    'subType',
+    'perPixelTargetFind',
+    'userNo',
+    'connectorEnd',
+    'connectorStart',
+    'connectorType',
+    'tips',
+    'connectorStyle',
+    'timestamp',
+    'moving',
+  ];
 
   static cacheProperties = [...cacheProperties, ...coordProps];
 
@@ -117,11 +132,11 @@ export class Arrow extends Line {
   }
 
   /**
- * Constructor
- * @param {Array} [points] Array of points
- * @param {Object} [options] Options object
- * @return {Line} thisArg
- */
+   * Constructor
+   * @param {Array} [points] Array of points
+   * @param {Object} [options] Options object
+   * @return {Line} thisArg
+   */
   constructor([x1, y1, x2, y2] = [0, 0, 0, 0], options) {
     super([x1, y1, x2, y2], options);
     this._setWidthHeight();
@@ -151,18 +166,26 @@ export class Arrow extends Line {
         actionHandler: (eventData, transform, x, y) => {
           //console.log('actionHandler')
           const target: any = transform.target;
-          if (target.locked) return;
+          if (target.locked) {
+            return;
+          }
 
           const hoverTarget = this.canvas.findTarget(eventData);
-          if (hoverTarget && hoverTarget.obj_type === 'WBArrow') return;
+          if (hoverTarget && hoverTarget.obj_type === 'WBArrow') {
+            return;
+          }
 
           if (hoverTarget) {
             let minPoint;
             //如果箭头在当前object内部，不用计算直接返回
-            if (x > this.left && x < this.left + this.width && y > this.top && y < this.top + this.height) {
+            if (
+              x > this.left &&
+              x < this.left + this.width &&
+              y > this.top &&
+              y < this.top + this.height
+            ) {
               minPoint = { x, y, dot: 0 };
-            }
-            else {
+            } else {
               minPoint = this.calcDistanceToTarget({ x, y }, hoverTarget);
             }
             hoverTarget.__corner = minPoint.dot;
@@ -176,7 +199,7 @@ export class Arrow extends Line {
 
             if (oldConnObj && oldConnObj.lines)
               oldConnObj.lines = oldConnObj.lines.filter(
-                item => item._id !== target._id
+                (item) => item._id !== target._id
               );
             this.canvas.setActiveObject(target);
             target.set('x1', x).set('y1', y);
@@ -188,7 +211,7 @@ export class Arrow extends Line {
 
           this.canvas.requestRenderAll();
           return true;
-        }
+        },
       }),
 
       end: new Control({
@@ -215,10 +238,14 @@ export class Arrow extends Line {
             //console.log('this hovertarget----------end');
             let minPoint;
             //如果箭头在当前object内部，不用计算直接返回
-            if (x > hoverTarget.left && x < hoverTarget.left + hoverTarget.width && y > hoverTarget.top && y < hoverTarget.top + hoverTarget.height) {
+            if (
+              x > hoverTarget.left &&
+              x < hoverTarget.left + hoverTarget.width &&
+              y > hoverTarget.top &&
+              y < hoverTarget.top + hoverTarget.height
+            ) {
               minPoint = { x, y, dot: 0 };
-            }
-            else {
+            } else {
               minPoint = this.calcDistanceToTarget({ x, y }, hoverTarget);
             }
 
@@ -237,7 +264,7 @@ export class Arrow extends Line {
 
             if (oldConnObj && oldConnObj.lines)
               oldConnObj.lines = oldConnObj.lines.filter(
-                item => item._id !== target._id
+                (item) => item._id !== target._id
               );
             target.set('x2', x).set('y2', y);
             target.connectorEnd = null;
@@ -248,64 +275,64 @@ export class Arrow extends Line {
           this.canvas.requestRenderAll();
 
           return true;
-        }
-      })
+        },
+      }),
     };
-    const acc = [];
-    for (let i = 0; i <= 4; i += 2) {
-      acc[i] = new Control({
-        cursorStyle: 'pointer',
-        pointIndex: i,
-        actionName: 'modifyCurve',
+    // const acc = [];
+    // for (let i = 0; i <= 4; i += 2) {
+    //   acc[i] = new Control({
+    //     cursorStyle: 'pointer',
+    //     pointIndex: i,
+    //     actionName: 'modifyCurve',
 
-        //@ts-ignore
-        mouseDownHandler: (eventData, transformData) => {
-          //console.log('actionHandler  --cmmen')
-          this.mousedownProcess(transformData, eventData, false);
-        },
-        positionHandler: (dim, finalMatrix, fabricObject) => {
-          //console.log('positionHandler  --cmmen')
-          return this.positionProcess(fabricObject, false);
-        },
-        actionHandler: (eventData, transform, x, y) => {
-          //console.log('actionHandler  --cmmen')
-          const target: any = transform.target;
-          if (target.locked) return;
+    //     //@ts-ignore
+    //     mouseDownHandler: (eventData, transformData) => {
+    //       //console.log('actionHandler  --cmmen')
+    //       this.mousedownProcess(transformData, eventData, false);
+    //     },
+    //     positionHandler: (dim, finalMatrix, fabricObject) => {
+    //       //console.log('positionHandler  --cmmen')
+    //       return this.positionProcess(fabricObject, false);
+    //     },
+    //     actionHandler: (eventData, transform, x, y) => {
+    //       //console.log('actionHandler  --cmmen')
+    //       const target: any = transform.target;
+    //       if (target.locked) return;
 
-          const hoverTarget = this.canvas.findTarget(eventData);
+    //       const hoverTarget = this.canvas.findTarget(eventData);
 
-          if (hoverTarget && hoverTarget.obj_type === 'WBArrow') return;
+    //       if (hoverTarget && hoverTarget.obj_type === 'WBArrow') return;
 
-          if (hoverTarget) {
-            //console.log('this hovertarget----------start11')
-            const minPoint = this.calcDistanceToTarget({ x, y }, hoverTarget);
-            hoverTarget.__corner = minPoint.dot;
+    //       if (hoverTarget) {
+    //         //console.log('this hovertarget----------start11')
+    //         const minPoint = this.calcDistanceToTarget({ x, y }, hoverTarget);
+    //         hoverTarget.__corner = minPoint.dot;
 
-            target.setConnectorObj(hoverTarget, minPoint, false, false);
-            // target.set('x2', minPoint.x).set('y2', minPoint.y);
-          } else {
-            const oldConnObj =
-              target.connectorEnd && target.connectorEnd._id
-                ? this.canvas.findById(target.connectorEnd._id)
-                : null;
+    //         target.setConnectorObj(hoverTarget, minPoint, false, false);
+    //         // target.set('x2', minPoint.x).set('y2', minPoint.y);
+    //       } else {
+    //         const oldConnObj =
+    //           target.connectorEnd && target.connectorEnd._id
+    //             ? this.canvas.findById(target.connectorEnd._id)
+    //             : null;
 
-            if (oldConnObj && oldConnObj.lines)
-              oldConnObj.lines = oldConnObj.lines.filter(
-                item => item._id !== target._id
-              );
+    //         if (oldConnObj && oldConnObj.lines)
+    //           oldConnObj.lines = oldConnObj.lines.filter(
+    //             (item) => item._id !== target._id
+    //           );
 
-            target.set('(x2+x1)/2', x).set('(y1+y2)/2', y);
-            //target.connectorEnd = null;
-          }
-          if (target) {
-            target.setCoords();
-          }
-          this.canvas.requestRenderAll();
+    //         target.set('(x2+x1)/2', x).set('(y1+y2)/2', y);
+    //         //target.connectorEnd = null;
+    //       }
+    //       if (target) {
+    //         target.setCoords();
+    //       }
+    //       this.canvas.requestRenderAll();
 
-          return true;
-        }
-      });
-    }
+    //       return true;
+    //     },
+    //   });
+    // }
 
     this.setControlsVisibility({
       mra: false,
@@ -388,7 +415,7 @@ export class Arrow extends Line {
       'connectorShape', // straight, angled, curved
       'connectorStyle', // solid, dashed, dotted
       'tips', // string, both, start, end, none
-    ]
+    ];
     keys.forEach((key) => {
       object[key] = this[key];
     });
@@ -397,9 +424,10 @@ export class Arrow extends Line {
 
   toObject(propertiesToInclude: Array<any>): object {
     return super.toObject(
-      [...this.extendPropeties, 'minWidth', 'splitByGrapheme'].concat(propertiesToInclude)
+      [...this.extendPropeties, 'minWidth', 'splitByGrapheme'].concat(
+        propertiesToInclude
+      )
     );
-
   }
 
   getCloneLineWidget() {
@@ -433,7 +461,7 @@ export class Arrow extends Line {
       'objectLock',
       'borderLineIcon',
       'delete',
-      'aiassist'
+      'aiassist',
     ];
   }
 
@@ -449,7 +477,7 @@ export class Arrow extends Line {
         'Bring forward',
         'Bring to front',
         'Send backward',
-        'Send to back'
+        'Send to back',
       ];
     } else {
       menuList = [
@@ -461,7 +489,7 @@ export class Arrow extends Line {
         'Copy',
         'Paste',
         'Cut',
-        'Delete'
+        'Delete',
       ];
     }
 
@@ -495,7 +523,7 @@ export class Arrow extends Line {
       x1: lineObj.left,
       y1: lineObj.top,
       x2: lineObj.left + (arrow.x2 - arrow.x1),
-      y2: lineObj.top + (arrow.y2 - arrow.y1)
+      y2: lineObj.top + (arrow.y2 - arrow.y1),
     };
     return position;
   }
@@ -535,7 +563,7 @@ export class Arrow extends Line {
       x1: lineObj.left,
       y1: lineObj.top,
       x2: lineObj.left + (lineObj.x2 - lineObj.x1),
-      y2: lineObj.top + (lineObj.y2 - lineObj.y1)
+      y2: lineObj.top + (lineObj.y2 - lineObj.y1),
     };
 
     const lObjwidth = (lineObj.x1 - lineObj.x2) * scalex;
@@ -552,7 +580,7 @@ export class Arrow extends Line {
     this.canvas.requestRenderAll();
   }
   removeArrowfromConnectObj(oldConnObj) {
-    oldConnObj.lines = oldConnObj.lines.filter(item => item._id !== this._id);
+    oldConnObj.lines = oldConnObj.lines.filter((item) => item._id !== this._id);
   }
   resetStrokeAfterScaling() {
     /* have to discard any active first */
@@ -669,7 +697,7 @@ export class Arrow extends Line {
     }
   }
   _render(ctx) {
-    const p = this.calcLinePoints();
+    const pointsOfLine = this.calcLinePoints();
     if (!this.ctx) this.ctx = ctx;
     ctx.lineWidth = (this.strokeWidth * 1) / Math.max(this.canvas.getZoom(), 1);
     ctx.strokeStyle = this.stroke;
@@ -681,31 +709,45 @@ export class Arrow extends Line {
     const connEndObj = this.canvas.findById(this.connectorEnd?._id);
 
     if (this.connectorShape === 'straight') {
+      console.log(
+        '$$$straight',
+        pointsOfLine.x1,
+        pointsOfLine.y1,
+        pointsOfLine.x2,
+        pointsOfLine.y2
+      );
       ctx.beginPath();
-      ctx.moveTo(p.x1, p.y1);
-      ctx.lineTo(p.x2, p.y2);
+      ctx.moveTo(pointsOfLine.x1, pointsOfLine.y1);
+      ctx.lineTo(pointsOfLine.x2, pointsOfLine.y2);
       ctx.stroke();
       if (this.subType === 'arrow') {
-        this.drawArrowTips(ctx, p);
+        this.drawArrowTips(ctx, pointsOfLine);
       }
-    } else if (this.connectorShape === 'curved') {
-      //console.log('connStartObj', connStartObj, 'connEndObj', connEndObj);
-      //console.log('line', this.x1, this.y1, this.x2, this.y2);
+    }
+
+    if (this.connectorShape === 'curved') {
+      console.log(
+        '$$$$curved',
+        pointsOfLine.x1,
+        pointsOfLine.y1,
+        pointsOfLine.x2,
+        pointsOfLine.y2
+      );
       let endAngle = 90;
       let startAngle = 270;
       let offset = 0;
       let etype = 'f';
       let stype = 'f';
 
-      if (p.x1 < p.x2) {
+      if (pointsOfLine.x1 < pointsOfLine.x2) {
         startAngle = 90;
         endAngle = 270;
       } else {
         startAngle = 270; //270;
         endAngle = 90; //90;
       }
-      let sp = { x: p.x1, y: p.y1 },
-        ep = { x: p.x2, y: p.y2 };
+      let startPoint = { x: pointsOfLine.x1, y: pointsOfLine.y1 },
+        endPoint = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
 
       if (connEndObj || connStartObj) {
         offset = 30;
@@ -713,40 +755,39 @@ export class Arrow extends Line {
         const threshold = 0.05;
         if (this.connectorStart) {
           if (Math.abs(this.connectorStart.ry - 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            startPoint = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 180;
             stype = 'b';
           } else if (Math.abs(this.connectorStart.ry + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            startPoint = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 0;
             stype = 'u';
           } else if (Math.abs(this.connectorStart.rx - 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            startPoint = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 90;
             stype = 'r';
           } else if (Math.abs(this.connectorStart.rx + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            startPoint = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 270;
             stype = 'l';
           }
         }
 
         if (this.connectorEnd) {
-
           if (Math.abs(this.connectorEnd.ry - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            endPoint = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 180;
             etype = 'b';
           } else if (Math.abs(this.connectorEnd.ry + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            endPoint = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 0;
             etype = 'u';
           } else if (Math.abs(this.connectorEnd.rx - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            endPoint = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 90;
             etype = 'r';
           } else if (Math.abs(this.connectorEnd.rx + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            endPoint = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 270;
             etype = 'l';
           }
@@ -754,7 +795,7 @@ export class Arrow extends Line {
       }
       this.drawBeizerBody(
         ctx,
-        p,
+        pointsOfLine,
         offset,
         stype,
         etype,
@@ -764,6 +805,13 @@ export class Arrow extends Line {
         endAngle
       );
     } else if (this.connectorShape === 'straight5') {
+      console.log(
+        '$$$$straight5',
+        pointsOfLine.x1,
+        pointsOfLine.y1,
+        pointsOfLine.x2,
+        pointsOfLine.y2
+      );
       let endAngle = 90;
       let startAngle = 270;
       let sx1a = 0;
@@ -773,36 +821,34 @@ export class Arrow extends Line {
 
       // console.log('in curved ', p.x1, p.y1, p.x2, p.y2);
 
-      let sp = { x: p.x1, y: p.y1 },
-        ep = { x: p.x2, y: p.y2 };
+      let sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 },
+        ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
 
       if (connEndObj || connStartObj) {
         offset = 20;
 
         const threshold = 0.05;
         if (this.connectorStart) {
-
           if (Math.abs(this.connectorStart.ry - 0.5) <= threshold) {
-
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 180;
             sx1a = 0;
             sy1a = offset;
             stype = 'b';
           } else if (Math.abs(this.connectorStart.ry + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 0;
             sx1a = 0;
             sy1a = -offset;
             stype = 'u';
           } else if (Math.abs(this.connectorStart.rx - 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 90;
             sx1a = offset;
             sy1a = 0;
             stype = 'r';
           } else if (Math.abs(this.connectorStart.rx + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 270;
             sx1a = -offset;
             sy1a = 0;
@@ -811,52 +857,47 @@ export class Arrow extends Line {
         }
 
         if (this.connectorEnd) {
-
           if (Math.abs(this.connectorEnd.ry - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 180;
             sx2a = 0;
             sy2a = offset;
             etype = 'b';
-
           } else if (Math.abs(this.connectorEnd.ry + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 0;
             sx2a = 0;
             sy2a = -offset;
             etype = 'u';
-
           } else if (Math.abs(this.connectorEnd.rx - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 90;
             sx2a = offset;
             sy2a = 0;
             etype = 'r';
-
           } else if (Math.abs(this.connectorEnd.rx + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 270;
             sx2a = -offset;
             sy2a = 0;
             etype = 'l';
-
           }
         }
       }
-      const sx1 = p.x1 + sx1a;
-      const sy1 = p.y1 + sy1a;
-      const sx2 = p.x2 + sx2a;
-      const sy2 = p.y2 + sy2a;
+      const sx1 = pointsOfLine.x1 + sx1a;
+      const sy1 = pointsOfLine.y1 + sy1a;
+      const sx2 = pointsOfLine.x2 + sx2a;
+      const sy2 = pointsOfLine.y2 + sy2a;
 
       {
-        ctx.moveTo(p.x1, p.y1);
+        ctx.moveTo(pointsOfLine.x1, pointsOfLine.y1);
         ctx.lineTo(sx1, sy1);
         ctx.stroke();
         ctx.moveTo(sx1, sy1);
         const py21 = (sy2 - sy1) / 3;
         ctx.bezierCurveTo(sx1, sy1 + py21, sx2, sy2 - py21, sx2, sy2);
         ctx.stroke();
-        ctx.moveTo(p.x2, p.y2);
+        ctx.moveTo(pointsOfLine.x2, pointsOfLine.y2);
         ctx.lineTo(sx2, sy2);
         ctx.stroke();
       }
@@ -867,29 +908,29 @@ export class Arrow extends Line {
     } else if (this.connectorShape == 'straight6') {
       const pts = [
         {
-          x: p.x1,
-          y: p.y1
+          x: pointsOfLine.x1,
+          y: pointsOfLine.y1,
         },
         {
-          x: p.x1 + (p.x2 - p.x1) / 6,
-          y: p.y1 + (2 * (p.y2 - p.y1)) / 6
+          x: pointsOfLine.x1 + (pointsOfLine.x2 - pointsOfLine.x1) / 6,
+          y: pointsOfLine.y1 + (2 * (pointsOfLine.y2 - pointsOfLine.y1)) / 6,
         },
         {
-          x: p.x1 + (3 * (p.x2 - p.x1)) / 6,
-          y: p.y1 + (3 * (p.y2 - p.y1)) / 6
+          x: pointsOfLine.x1 + (3 * (pointsOfLine.x2 - pointsOfLine.x1)) / 6,
+          y: pointsOfLine.y1 + (3 * (pointsOfLine.y2 - pointsOfLine.y1)) / 6,
         },
         {
-          x: p.x1 + (4 * (p.x2 - p.x1)) / 6,
-          y: p.y1 + (5 * (p.y2 - p.y1)) / 6
+          x: pointsOfLine.x1 + (4 * (pointsOfLine.x2 - pointsOfLine.x1)) / 6,
+          y: pointsOfLine.y1 + (5 * (pointsOfLine.y2 - pointsOfLine.y1)) / 6,
         },
         {
-          x: p.x1 + (5 * (p.x2 - p.x1)) / 6,
-          y: p.y1 + (5 * (p.y2 - p.y1)) / 6
+          x: pointsOfLine.x1 + (5 * (pointsOfLine.x2 - pointsOfLine.x1)) / 6,
+          y: pointsOfLine.y1 + (5 * (pointsOfLine.y2 - pointsOfLine.y1)) / 6,
         },
         {
-          x: p.x2,
-          y: p.y2
-        }
+          x: pointsOfLine.x2,
+          y: pointsOfLine.y2,
+        },
       ];
 
       this.spdrawCurve(ctx, this.spmyconvert(pts), 0.5); //default tension=0.5
@@ -901,18 +942,32 @@ export class Arrow extends Line {
         Math.round(angle / 90) * 90 === 180 ||
         (Math.round(angle / 90) * 90) % 360 === 0
       ) {
-        ctx.moveTo(p.x1, p.y1);
-        const py21 = (p.y2 - p.y1) / 3;
-        ctx.bezierCurveTo(p.x1, p.y1 + py21, p.x2, p.y2 - py21, p.x2, p.y2);
+        ctx.moveTo(pointsOfLine.x1, pointsOfLine.y1);
+        const py21 = (pointsOfLine.y2 - pointsOfLine.y1) / 3;
+        ctx.bezierCurveTo(
+          pointsOfLine.x1,
+          pointsOfLine.y1 + py21,
+          pointsOfLine.x2,
+          pointsOfLine.y2 - py21,
+          pointsOfLine.x2,
+          pointsOfLine.y2
+        );
         ctx.stroke();
       } else {
-        ctx.moveTo(p.x1, p.y1);
-        const px21 = (p.x2 - p.x1) / 3;
-        ctx.bezierCurveTo(p.x1 + px21, p.y1, p.x2 - px21, p.y2, p.x2, p.y2);
+        ctx.moveTo(pointsOfLine.x1, pointsOfLine.y1);
+        const px21 = (pointsOfLine.x2 - pointsOfLine.x1) / 3;
+        ctx.bezierCurveTo(
+          pointsOfLine.x1 + px21,
+          pointsOfLine.y1,
+          pointsOfLine.x2 - px21,
+          pointsOfLine.y2,
+          pointsOfLine.x2,
+          pointsOfLine.y2
+        );
         ctx.stroke();
       }
       if (this.subType === 'arrow') {
-        this.drawArrowTips(ctx, p);
+        this.drawArrowTips(ctx, pointsOfLine);
       }
     }
     if (this.connectorShape === 'angled') {
@@ -924,64 +979,57 @@ export class Arrow extends Line {
       let etype = 'f';
       let stype = 'f';
 
-      if (p.x1 < p.x2) {
+      if (pointsOfLine.x1 < pointsOfLine.x2) {
         startAngle = 90;
         endAngle = 270;
       } else {
         startAngle = 270;
         endAngle = 90;
       }
-      let sp = { x: p.x1, y: p.y1 },
-        ep = { x: p.x2, y: p.y2 };
+      let sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 },
+        ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
 
       if (connEndObj || connStartObj) {
         offset = 30;
 
         const threshold = 0.05;
         if (this.connectorStart) {
-
           if (Math.abs(this.connectorStart.ry - 0.5) <= threshold) {
-
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 180;
             stype = 'b';
           } else if (Math.abs(this.connectorStart.ry + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 0;
             stype = 'u';
           } else if (Math.abs(this.connectorStart.rx - 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 90;
             stype = 'r';
           } else if (Math.abs(this.connectorStart.rx + 0.5) <= threshold) {
-            sp = { x: p.x1, y: p.y1 };
+            sp = { x: pointsOfLine.x1, y: pointsOfLine.y1 };
             startAngle = 270;
             stype = 'l';
           }
         }
 
         if (this.connectorEnd) {
-
           if (Math.abs(this.connectorEnd.ry - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 180;
             etype = 'b';
-
           } else if (Math.abs(this.connectorEnd.ry + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 0;
             etype = 'u';
-
           } else if (Math.abs(this.connectorEnd.rx - 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 90;
             etype = 'r';
-
           } else if (Math.abs(this.connectorEnd.rx + 0.5) <= threshold) {
-            ep = { x: p.x2, y: p.y2 };
+            ep = { x: pointsOfLine.x2, y: pointsOfLine.y2 };
             endAngle = 270;
             etype = 'l';
-
           }
         }
       }
@@ -991,9 +1039,18 @@ export class Arrow extends Line {
       if (this.tips === 'end' || this.tips === 'both')
         this.drawArrowTip(ctx, ep, endAngle);
 
-      this.drawBody(ctx, p, offset, stype, etype, connStartObj, connEndObj);
+      this.drawBody(
+        ctx,
+        pointsOfLine,
+        offset,
+        stype,
+        etype,
+        connStartObj,
+        connEndObj
+      );
     }
   }
+
   drawBeizerBody(
     ctx,
     p,
@@ -1006,7 +1063,13 @@ export class Arrow extends Line {
     endAngle
   ) {
     offset = 20;
-    let start; let cp1; let cp2; let end; let newstart; let newend; let fPoints;
+    let start;
+    let cp1;
+    let cp2;
+    let end;
+    let newstart;
+    let newend;
+    let fPoints;
 
     start = { x: p.x1, y: p.y1 };
     end = { x: p.x2, y: p.y2 };
@@ -1153,7 +1216,6 @@ export class Arrow extends Line {
         newend = { x: end.x + offset, y: end.y };
 
         if (start.x < end.x) {
-
           cp1 = { x: newend.x, y: newstart.y };
           cp2 = cp1;
         } else {
@@ -1199,7 +1261,6 @@ export class Arrow extends Line {
           if (start.x < end.x) {
             cp2 = { x: newend.x, y: newstart.y };
             cp1 = { x: newstart.x, y: newend.y };
-
           } else {
             cp2 = { x: newstart.x, y: newend.y };
             cp1 = { x: newend.x, y: newstart.y };
@@ -1386,12 +1447,10 @@ export class Arrow extends Line {
             } else {
               cp1 = { x: newstart.x, y: newend.y };
               cp2 = { x: newend.x, y: newstart.y };
-
             }
           } else {
             cp2 = { x: newstart.x, y: newend.y };
             cp1 = { x: newend.x, y: newstart.y };
-
           }
         }
         if (etype === 'b') {
@@ -1420,7 +1479,7 @@ export class Arrow extends Line {
       cp1: cp1,
       cp2: cp2,
       end: newend,
-      post: end
+      post: end,
     };
 
     this.drawBZSegments(ctx, fPoints);
@@ -1431,6 +1490,7 @@ export class Arrow extends Line {
     if (this.tips === 'end' || this.tips === 'both')
       this.drawArrowTip(ctx, end, endAngle);
   }
+
   drawBZSegments(ctx, fPoints) {
     ctx.beginPath();
     ctx.moveTo(fPoints.pre.x, fPoints.pre.y);
@@ -1666,16 +1726,12 @@ export class Arrow extends Line {
         const mst = { x: ms.x - offset, y: ms.y };
         const met = { x: me.x, y: me.y + offset };
         if (x1 > x2) {
-          if (y1 > y2)
-            m1 = { x: ms.x, y: me.y - midy };
-          else
-            m1 = { x: ms.x, y: me.y + midy };
+          if (y1 > y2) m1 = { x: ms.x, y: me.y - midy };
+          else m1 = { x: ms.x, y: me.y + midy };
           m2 = { x: me.x, y: m1.y };
           keyPoints = [mst, ms, m1, m2, me, met];
-
         } else {
-          if (y1 > y2)
-            keyPoints = [mst, ms, m1, m2, me, met];
+          if (y1 > y2) keyPoints = [mst, ms, m1, m2, me, met];
           else {
             m1 = { x: me.x, y: ms.y };
             keyPoints = [mst, ms, m1, me, met];
@@ -1692,9 +1748,7 @@ export class Arrow extends Line {
           if (y1 < y2) {
             m1 = { x: me.x, y: ms.y };
             keyPoints = [mst, ms, m1, me, met];
-          }
-          else
-            keyPoints = [mst, ms, m1, m2, me, met];
+          } else keyPoints = [mst, ms, m1, m2, me, met];
         }
       } else if (stype === 'l' && etype === 'b') {
         const mst = { x: ms.x + offset, y: ms.y };
@@ -1819,7 +1873,11 @@ export class Arrow extends Line {
       y = fabricObject.y2 - offsetY;
     }
     // recalculate control's coordinate by viewportTransform and line's transform matrix
-    if (this.canvas && this.canvas.viewportTransform && fabricObject.calcTransformMatrix) {
+    if (
+      this.canvas &&
+      this.canvas.viewportTransform &&
+      fabricObject.calcTransformMatrix
+    ) {
       const matrix = multiplyTransformMatrices(
         this.canvas.viewportTransform,
         fabricObject.calcTransformMatrix()
@@ -1827,11 +1885,9 @@ export class Arrow extends Line {
       //@ts-ignore
       return transformPoint({ x, y }, matrix);
     }
-
-
   }
   mousedownProcess(transformData, eventData, isStart) {
-    console.log('mousedownProcess')
+    console.log('mousedownProcess');
     return;
   }
   mouseupProcess(transformData, eventData, isStart) {
@@ -1913,12 +1969,12 @@ export class Arrow extends Line {
       if (isStart)
         target.set({
           x1: pointer.x,
-          y1: pointer.y
+          y1: pointer.y,
         });
       if (!isStart)
         target.set({
           x2: pointer.x,
-          y2: pointer.y
+          y2: pointer.y,
         });
     }
     oldConnStartObj = null;
@@ -1937,7 +1993,7 @@ export class Arrow extends Line {
       'connectorEnd',
       'scaleX',
       'scaleY',
-      'zIndex'
+      'zIndex',
     ]);
   }
 
@@ -1955,7 +2011,7 @@ export class Arrow extends Line {
         return {
           x: ml.x,
           y: ml.y,
-          dot: 'mla'
+          dot: 'mla',
         };
       }
 
@@ -1963,7 +2019,7 @@ export class Arrow extends Line {
         return {
           x: mr.x,
           y: mr.y,
-          dot: 'mra'
+          dot: 'mra',
         };
       }
     }
@@ -1973,7 +2029,7 @@ export class Arrow extends Line {
         return {
           x: mt.x,
           y: mt.y,
-          dot: 'mta'
+          dot: 'mta',
         };
       }
 
@@ -1981,7 +2037,7 @@ export class Arrow extends Line {
         return {
           x: mb.x,
           y: mb.y,
-          dot: 'mba'
+          dot: 'mba',
         };
       }
     }
@@ -1989,23 +2045,24 @@ export class Arrow extends Line {
     return {
       x: current.x - 5,
       y: current.y - 5,
-      dot: 0
+      dot: 0,
     };
   }
   calcDistanceToControlPoint(current, target) {
     const { left, top, width, height, scaleX, scaleY } = target;
-    if (this.canvas.getActiveObject() &&
+    if (
+      this.canvas.getActiveObject() &&
       (this.canvas.getActiveObject()?.obj_type === 'WBTextbox' ||
         this.canvas.getActiveObject()?.obj_type === 'WBRectNotes' ||
         this.canvas.getActiveObject()?.obj_type === 'WBCircleNotes' ||
-        this.canvas.getActiveObject()?.obj_type === 'WBShapeNotes'
-      )) {
+        this.canvas.getActiveObject()?.obj_type === 'WBShapeNotes')
+    ) {
       if (this.canvas.getActiveObject().isEditing) {
-        this.canvas.getActiveObject().exitEditing()
+        this.canvas.getActiveObject().exitEditing();
       }
     }
 
-    const range = 30 // 计算范围时包括画布缩放
+    const range = 30; // 计算范围时包括画布缩放
 
     const ml = { x: left - (width * scaleX) / 2, y: top };
     const mr = { x: left + (width * scaleX) / 2, y: top };
@@ -2017,7 +2074,7 @@ export class Arrow extends Line {
         return {
           x: ml.x,
           y: ml.y,
-          dot: 'mla'
+          dot: 'mla',
         };
       }
 
@@ -2025,7 +2082,7 @@ export class Arrow extends Line {
         return {
           x: mr.x,
           y: mr.y,
-          dot: 'mra'
+          dot: 'mra',
         };
       }
     }
@@ -2035,7 +2092,7 @@ export class Arrow extends Line {
         return {
           x: mt.x,
           y: mt.y,
-          dot: 'mta'
+          dot: 'mta',
         };
       }
 
@@ -2043,7 +2100,7 @@ export class Arrow extends Line {
         return {
           x: mb.x,
           y: mb.y,
-          dot: 'mba'
+          dot: 'mba',
         };
       }
     }
@@ -2051,9 +2108,8 @@ export class Arrow extends Line {
     return {
       x: current.x - 5,
       y: current.y - 5,
-      dot: 0
+      dot: 0,
     };
-
   }
 }
 

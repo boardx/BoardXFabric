@@ -513,7 +513,7 @@ export class StaticCanvas<
       if (!cssOnly) {
         this._setBackstoreDimension(prop as keyof TSize, value);
         cssValue += 'px';
-        this.hasLostContext = true;
+        // this.hasLostContext = true;
       }
 
       if (!backstoreOnly) {
@@ -771,6 +771,7 @@ export class StaticCanvas<
    * @param {Array} objects to render
    */
   renderCanvas(ctx: CanvasRenderingContext2D, objects: FabricObject[]) {
+    console.log('renderCanvas');
     if (this.destroyed) {
       return;
     }
