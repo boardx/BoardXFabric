@@ -1,3 +1,5 @@
+#this project will be moved to https://github.com/boardx/canvasx
+
 # x-canvas
 
 ## Overview
